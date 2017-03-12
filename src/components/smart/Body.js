@@ -1,8 +1,8 @@
 
 import React from "react";
-import SearchOptions from "../components/SearchOptions";
-import {NoteView} from "../components/NoteView";
-import {NoteEdit} from "../components/NoteEdit";
+import SearchOptions from "/SearchOptions";
+import {NoteView} from "../dumb/NoteView";
+import {NoteEdit} from "../dumb/NoteEdit";
 import {connect} from "react-redux"
 
 import {updateLimit, updateStart, updateOrder, updateId, updateView} from "../actions/GuiActions";
