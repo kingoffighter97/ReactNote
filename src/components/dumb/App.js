@@ -1,10 +1,6 @@
 import React from "react";
-import {connect} from "react-redux";
-
-//import {setName} from "../actions/userActions";
-
 import {Header} from "./Header";
-import Body from "./Body";
+import Body from "../smart/Body";
 
 export const App = (props) => {
     return (
@@ -16,21 +12,3 @@ export const App = (props) => {
         </div>
     );
 };
-
-
-// const mapStateToProps = (state) => {
-//     return {
-//         user: state.user,
-//         math: state.math
-//     };
-// };
-//
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         setName: (name) => {
-//             dispatch(setName(name));
-//         }
-//     };
-// };
-//
-// export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -10,7 +10,7 @@ const NoteViewReducer = (state = initialState, action) => {
         case "POPULATE_NOTES":
             state = {
                 ...state,
-                note :action.payload
+                notes :action.payload
             };
             break;
         }

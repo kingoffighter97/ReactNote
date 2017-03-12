@@ -16,7 +16,19 @@ export function addNote(contents) {
 
 export function populateNotes(limit,start,order) {
 
-    // Connect to database to get data
+    // Get bunch of notes using limit, start from and order
+    var data = [];
+
+    return {
+        type: "POPULATE_NOTES",
+        payload: data
+    }
+
+}
+
+export function populateSingleNote(id) {
+
+    // Get a note using its id
     var data = [];
 
     return {

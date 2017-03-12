@@ -1,18 +1,19 @@
 
 import React from "react";
-import SearchOptions from "/SearchOptions";
+import {SearchOptions} from "../dumb/SearchOptions";
 import {NoteView} from "../dumb/NoteView";
 import {NoteEdit} from "../dumb/NoteEdit";
 import {connect} from "react-redux"
 
-import {updateLimit, updateStart, updateOrder, updateId, updateView} from "../actions/GuiActions";
-import {updateCurrentEditedNote} from "../actions/NoteEditActions";
+import {updateLimit, updateStart, updateOrder, updateId, updateView} from "../../actions/GuiActions";
+import {updateCurrentEditedNote} from "../../actions/NoteEditActions";
+import {populateNotes} from "../../actions/NoteViewActions"
 
 class Body extends React.Component {
     render() {
         var content = "";
-        var currentIn = this.props.guiReducer.currentIn;
-        if (currentIn == "VIEW")
+        var gui = this.props.guiReducer;
+        if (gui.currentIn == "VIEW")
         {
             console.log("currentIn: View");
             var listOfNotes = this.props.noteViewReducer.notes;
@@ -28,7 +29,7 @@ class Body extends React.Component {
             }
 
         }
-        else if (currentIn == "EDIT")
+        else if (gui.currentIn == "EDIT")
         {
             console.log("currentIn: Edit");
             var i = this.props.noteEditReducer;
@@ -38,7 +39,14 @@ class Body extends React.Component {
 
         return (
             <div>
-                <SearchOptions/>
+                <SearchOptions
+                    handleLimitChange={(e) => this.handleLimitChange(e)}
+                    handleStartChange={(e) => this.handleStartChange(e)}
+                    handleOrderChange={(e) => this.handleOrderChange(e)}
+                    handleSearchIdChange={(e) => this.handleSearchIdChange(e)}
+                    handleMassSearchBtn={() => this.handleMassSearchBtn(gui.limit, gui.start, gui.order)}
+                    handleSingleSearchBtn={() => this.handleSingleSearchBtn(gui.id)}
+                />
                 <hr/>
                 {content}
             </div>
@@ -76,12 +84,13 @@ const mapDispatchToProps = (dispatch) => {
         handleSearchIdChange: (event) => {
             dispatch(updateId(event.target.value));
         },
-        handleViewChange: (state) => {
-            dispatch(updateView(state));
-        },
         handleMassSearchBtn: (limit, start, order) => {
             dispatch(populateNotes(limit, start, order));
-            dispatch(updateView("View"));
+            dispatch(updateView("VIEW"));
+        },
+        handleSingleSearchBtn: (id) => {
+            dispatch(populateSingleNote(id));
+            dispatch(updateView("VIEW"));
         }
     };
 };
