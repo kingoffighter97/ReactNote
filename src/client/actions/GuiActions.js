@@ -12,21 +12,6 @@ export function addNote(contents) {
 
 }
 
-
-export function populateNotes(limit,start,order) {
-
-    // Connect to database to get data
-    var data = [];
-
-    return {
-        type: "POPULATE_NOTES",
-        payload: data
-    }
-
-}
-
-
-
 export function updateLimit(limit) {
     return {
         type: "GUI_UPDATE_LIMIT",

@@ -7,7 +7,7 @@ import {connect} from "react-redux"
 
 import {updateLimit, updateStart, updateOrder, updateId, updateView} from "../../actions/GuiActions";
 import {updateCurrentEditedNote} from "../../actions/NoteEditActions";
-import {populateNotes} from "../../actions/NoteViewActions"
+import {singleSearchNote, multiSearchNotes} from "../../actions/NoteViewActions"
 
 class Body extends React.Component {
     render() {
@@ -24,7 +24,12 @@ class Body extends React.Component {
             else
             {
                 content = listOfNotes.map((i) =>
-                    <NoteView IdNumber={i.Id} Date={i.Date} Content={i.Content} editBtnClicked={() => this.props.handleEditBtn(i.Id, i.Date, i.Content)} />
+                    <NoteView
+                        IdNumber={i.Id}
+                        Date={i.Date}
+                        Content={i.Content}
+                        editBtnClicked={() => this.props.handleEditBtn(i.Id, i.Date, i.Content)}
+                    />
                 );
             }
 
@@ -33,7 +38,12 @@ class Body extends React.Component {
         {
             console.log("currentIn: Edit");
             var i = this.props.noteEditReducer;
-            content = <NoteEdit IdNumber={i.Id} Date={i.Date} Content={i.Content} />;
+            content = <NoteEdit
+                IdNumber={i.Id}
+                Date={i.Date}
+                Content={i.Content}
+                handleSaveBtn={() => this.handleSaveBtn(i)}
+            />;
         }
 
 
@@ -70,7 +80,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         handleEditBtn: (id, date, content) => {
             dispatch(updateView("EDIT"));
-            dispatch(updateCurrentEditedNote(id, date, content));
+            dispatch(updateCurrentEditedNote(id, date, content, mode));
         },
         handleLimitChange: (event) => {
             dispatch(updateLimit(event.target.value));
@@ -85,13 +95,24 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(updateId(event.target.value));
         },
         handleMassSearchBtn: (limit, start, order) => {
-            dispatch(populateNotes(limit, start, order));
+            dispatch(multiSearchNotes(limit, start, order));
             dispatch(updateView("VIEW"));
         },
         handleSingleSearchBtn: (id) => {
-            dispatch(populateSingleNote(id));
+            dispatch(singleSearchNote(id));
             dispatch(updateView("VIEW"));
+        },
+        handleSaveBtn: (state) => {
+            if (state.currentAction == "ADD")
+            {
+                dispatch(addNote(state.content));
+            }
+            else if (state.currentAction == "UPDATE")
+            {
+                dispatch(updateNote(state.id, state.content));
+            }
         }
+
     };
 };
 

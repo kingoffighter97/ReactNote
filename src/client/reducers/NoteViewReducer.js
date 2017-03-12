@@ -7,7 +7,14 @@
 // This is storing data to displayed to the GUI
 const NoteViewReducer = (state = initialState, action) => {
     switch (action.type) {
-        case "POPULATE_NOTES":
+        case "NOTE_SSEARCH_OK":
+            state = {
+                ...state,
+                notes :action.payload
+            };
+            break;
+
+        case "NOTE_MSEARCH_OK":
             state = {
                 ...state,
                 notes :action.payload

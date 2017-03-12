@@ -13,9 +13,11 @@ const NoteEditReducer = (state = initialState, action) => {
                 ...state,
                 Id: action.payload.Id,
                 Date: action.payload.Date,
-                Content: action.payload.Content
+                Content: action.payload.Content,
+                CurrentAction: action.payload.CurrentAction
             };
             break;
+
     }
     return state;
 };
@@ -23,7 +25,8 @@ const NoteEditReducer = (state = initialState, action) => {
 const initialState = {
     Id: 0,
     Date: "",
-    Content: "THIS IS A TESTING STRING"
+    Content: "",
+    CurrentAction: "ADD"
 };
 
 export default NoteEditReducer;
