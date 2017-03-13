@@ -4,8 +4,8 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-
-const routes = require('./routes')
+const favicon = require('serve-favicon');
+const routes = require('./routes');
 
 const app = express();
 

@@ -18,6 +18,11 @@ router.get('/js/bundle.js', (req, res, next) => {
         __dirname, '..', 'static', 'js', 'bundle.js'));
 });
 
+router.get('/favicon.ico', (req, res, next) => {
+    res.sendFile(path.join(
+        __dirname, '..', 'static', 'favicon.ico'));
+});
+
 
 
 router.post('/note/add', (req, res, next) => {
@@ -209,6 +214,11 @@ router.put('/note/:id', (req, res, next) => {
 
         return res.json({success: true, data: true});
     });
+});
+
+router.get('*', (req, res, next) => {
+    res.sendFile(path.join(
+        __dirname, '..', 'static', 'index.html'));
 });
 
 module.exports = router;

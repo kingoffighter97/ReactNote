@@ -1,36 +1,26 @@
-const webpack = require('webpack');
-const path = require('path');
+var path = require("path");
 
+var DIST_DIR = path.resolve(__dirname, "src", "static");
+var SRC_DIR = path.resolve(__dirname, "src", "client");
 
-
-module.exports = {
-    entry: path.join(__dirname, 'src', 'app-client.js'),
+var config = {
+    entry: SRC_DIR + "/index.js",
     output: {
-        path: path.join(__dirname, 'src', 'static', 'js'),
-        filename: 'bundle.js'
+        path: DIST_DIR + "/js/",
+        filename: "bundle.js",
     },
     module: {
-        loaders: [{
-            test: path.join(__dirname, 'src'),
-            loader: ['babel-loader'],
-            query: {
-                cacheDirectory: 'babel_cache',
-                presets: ['react', 'es2015']
+        loaders: [
+            {
+                test: /\.js?/,
+                include: SRC_DIR,
+                loader: "babel-loader",
+                query: {
+                    presets: ["react", "es2015", "stage-2"]
+                }
             }
-        }]
-    },
-    plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-        }),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: { warnings: false },
-            mangle: true,
-            sourcemap: false,
-            beautify: false,
-            dead_code: true
-        })
-    ]
+        ]
+    }
 };
+
+module.exports = config;
