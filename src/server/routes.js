@@ -4,8 +4,6 @@ const pg = require('pg');
 const path = require('path');
 var url = require('url');
 
-//const connectionString;
-
 //Non API gets
 router.get('/', (req, res, next) => {
     console.log("home");

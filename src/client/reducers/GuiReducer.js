@@ -46,7 +46,7 @@ const GuiReducer = (state = initialState, action) => {
 const initialState = {
     limit: 0,
     start: 1,
-    order: "asc",
+    order: "ASC",
     id: 0,
     currentIn: "VIEW"
 };

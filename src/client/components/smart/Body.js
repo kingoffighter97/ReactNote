@@ -1,9 +1,9 @@
 
 import React from "react";
+import {connect} from "react-redux"
 import {SearchOptions} from "../dumb/SearchOptions";
 import {NoteView} from "../dumb/NoteView";
 import {NoteEdit} from "../dumb/NoteEdit";
-import {connect} from "react-redux"
 
 import {updateLimit, updateStart, updateOrder, updateId, updateView} from "../../actions/GuiActions";
 import {updateCurrentEditedNote} from "../../actions/NoteEditActions";
@@ -23,12 +23,13 @@ class Body extends React.Component {
             }
             else
             {
-                content = listOfNotes.map((i) =>
+                content = listOfNotes.map((object, i) =>
                     <NoteView
-                        IdNumber={i.Id}
-                        Date={i.Date}
-                        Content={i.Content}
-                        editBtnClicked={() => this.props.handleEditBtn(i.Id, i.Date, i.Content)}
+                        key = {i}
+                        IdNumber={object.Id}
+                        Date={object.Date}
+                        Content={object.Content}
+                        editBtnClicked={() => this.props.handleEditBtn(object.Id, object.Date, object.Content)}
                     />
                 );
             }
@@ -42,7 +43,7 @@ class Body extends React.Component {
                 IdNumber={i.Id}
                 Date={i.Date}
                 Content={i.Content}
-                handleSaveBtn={() => this.handleSaveBtn(i)}
+                handleSaveBtn={() => this.props.handleSaveBtn(i)}
             />;
         }
 
@@ -50,12 +51,12 @@ class Body extends React.Component {
         return (
             <div>
                 <SearchOptions
-                    handleLimitChange={(e) => this.handleLimitChange(e)}
-                    handleStartChange={(e) => this.handleStartChange(e)}
-                    handleOrderChange={(e) => this.handleOrderChange(e)}
-                    handleSearchIdChange={(e) => this.handleSearchIdChange(e)}
-                    handleMassSearchBtn={() => this.handleMassSearchBtn(gui.limit, gui.start, gui.order)}
-                    handleSingleSearchBtn={() => this.handleSingleSearchBtn(gui.id)}
+                    handleLimitChange={(e) => this.props.handleLimitChange(e)}
+                    handleStartChange={(e) => this.props.handleStartChange(e)}
+                    handleOrderChange={(e) => this.props.handleOrderChange(e)}
+                    handleSearchIdChange={(e) => this.props.handleSearchIdChange(e)}
+                    handleMassSearchBtn={() => this.props.handleMassSearchBtn(gui.limit, gui.start, gui.order)}
+                    handleSingleSearchBtn={() => this.props.handleSingleSearchBtn(gui.id)}
                 />
                 <hr/>
                 {content}

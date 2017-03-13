@@ -23,7 +23,7 @@ export const SearchOptions = (props) => {
                     <label className="col-md-5 col-form-label" ><b>Order</b></label>
                     <div className="col-md-6">
                         <select className="form-control custom-select" onChange={(e) => props.handleOrderChange(e)} id="inlineFormCustomSelect">
-                            <option value="ASC" selected>Ascending</option>
+                            <option value="ASC">Ascending</option>
                             <option value="DSC">Descending</option>
                         </select>
                     </div>
