@@ -9,7 +9,7 @@ import axios from "axios";
 export function multiSearchNotes(limit,start,order) {
 
     // Get a bunch of notes using limit, start from and order
-    axios.get("/api/note?limit=" + limit + "&start=" + start +"&order=" + order)
+    axios.get("/note?limit=" + limit + "&start=" + start +"&order=" + order)
         .then((response) => {
             return ({
                 type: "NOTE_MSEARCH_OK",
@@ -23,19 +23,20 @@ export function multiSearchNotes(limit,start,order) {
 }
 
 export function singleSearchNote(id) {
-
-
-    axios.get("/api/note/" + id)
-        .then((response) => {
-            return ({
-                type: "NOTE_SSEARCH_OK",
-                payload: response.data
-            });
-        })
-        .catch(() => {
-            alert("Single search failed!");
-        });
-
+    console.log("id: ", id);
+    return dispatch => {
+        axios.get("/note/" + id)
+            .then((response) => {
+                console.log(response.data);
+                dispatch({
+                    type: "NOTE_SSEARCH_OK",
+                    payload: response.data
+                })
+            })
+            .catch((error) => {
+                alert("ERROR: " + error);
+            })
+    };
 }
 
 

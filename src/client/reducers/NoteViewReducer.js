@@ -8,10 +8,12 @@
 const NoteViewReducer = (state = initialState, action) => {
     switch (action.type) {
         case "NOTE_SSEARCH_OK":
+            console.log(action.payload);
             state = {
                 ...state,
-                notes :action.payload
+                notes: action.payload
             };
+            console.log(state.notes);
             break;
 
         case "NOTE_MSEARCH_OK":

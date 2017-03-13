@@ -30,7 +30,7 @@ export function addNote(content) {
 
 export function updateNote(id, content) {
 
-    axios.put("/api/note/" + id, content)
+    axios.put("/note" + id, content)
         .then(() => {
             alert("Note updated successfully");
         })

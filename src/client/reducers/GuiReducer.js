@@ -31,12 +31,14 @@ const GuiReducer = (state = initialState, action) => {
                 ...state,
                 id: action.payload
             }
+            break;
 
         case "GUI_UPDATE_VIEW":
             state = {
                 ...state,
                 currentIn: action.payload
             }
+            break;
 
     }
     return state;

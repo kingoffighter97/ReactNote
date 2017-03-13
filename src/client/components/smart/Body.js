@@ -26,9 +26,9 @@ class Body extends React.Component {
                 content = listOfNotes.map((object, i) =>
                     <NoteView
                         key = {i}
-                        IdNumber={object.Id}
-                        Date={object.Date}
-                        Content={object.Content}
+                        IdNumber={object.id}
+                        Date={object.date}
+                        Content={object.content}
                         editBtnClicked={() => this.props.handleEditBtn(object.Id, object.Date, object.Content)}
                     />
                 );
