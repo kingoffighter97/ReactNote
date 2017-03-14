@@ -27,11 +27,7 @@ const NoteViewReducer = (state = initialState, action) => {
 };
 
 const initialState = {
-    notes: [{
-        id: 1,
-        date: "WHAT",
-        content: "THIS IS A TESTING STRING"
-    }],
+    notes: [],
 };
 
 export default NoteViewReducer;

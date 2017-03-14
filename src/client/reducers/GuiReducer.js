@@ -50,7 +50,7 @@ const initialState = {
     start: "1",
     order: "DESC",
     id: "",
-    currentIn: "VIEW"
+    currentIn: ""
 };
 
 export default GuiReducer;
