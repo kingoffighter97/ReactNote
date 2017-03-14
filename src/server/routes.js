@@ -4,14 +4,17 @@ const pg = require('pg');
 const path = require('path');
 var url = require('url');
 
+
+// NEED FIX: connectionString should not be hard coded
 var connectionString = "postgres://ezmlztpzifztqq:ba45038d5ba7fdde885d1af4977156dc5c077851bb060d85cdca725f372e069d@ec2-23-23-220-163.compute-1.amazonaws.com:5432/d1c24qahf2ajjg";
+
+
 
 //Get static files
 router.get('/', (req, res, next) => {
     res.sendFile(path.join(
         __dirname, '..' ,'static', 'index.html'));
 });
-
 
 router.get('/js/bundle.js', (req, res, next) => {
     res.sendFile(path.join(
@@ -25,14 +28,14 @@ router.get('/favicon.ico', (req, res, next) => {
 
 //Get one note
 router.get('/note/:id', (req, res, next) => {
+
     const results = [];
-    var targetId = req.params.id; //Gets the note parameter
 
+    var targetId = req.params.id; // Get target ID from the URL
 
-
+    // Connect to the database
     pg.defaults.ssl = true;
     pg.connect(connectionString, (err, client, done) => {
-
         // Handle connection errors
         if(err) {
             done();
@@ -43,12 +46,13 @@ router.get('/note/:id', (req, res, next) => {
         // Get 1 note from the server
         const query = client.query("SELECT * from notes WHERE id=(" + targetId + ");");
 
-        // Stream results back one row at a time
+        // Get results back
+        // We are getting only 1 note so there should be only 1 element in results
         query.on('row', (row) => {
             results.push(row);
         });
 
-        // close the connection and check returned data
+        // Send data back to the client in json format
         query.on('end', () => {
             done();
             if (results[0] == undefined)
@@ -65,7 +69,8 @@ router.get('/note/:id', (req, res, next) => {
 //Get several notes
 router.get('/note', (req, res, next) => {
     var results = [];
-    // Get the limit, start and order from the URL
+
+    // Get the limit, start and order values from the string after '?' in the URL/query
     var limit = req.query.limit;
     var start = req.query.start;
     var order = req.query.order;
@@ -75,7 +80,7 @@ router.get('/note', (req, res, next) => {
         limit = "ALL";
     }
 
-    if (start == "") {
+    if (start == ""  || start <= 0 || start == undefined) {
         // OFFSET 0 is the same as not having the OFFSET clause
         start = "0";
     }
@@ -89,9 +94,10 @@ router.get('/note', (req, res, next) => {
         order = "DESC";
     }
 
+
+    // Connect to the database
     pg.defaults.ssl = true;
     pg.connect(connectionString, (err, client, done) => {
-
         // Handle connection errors
         if(err) {
             done();
@@ -99,20 +105,22 @@ router.get('/note', (req, res, next) => {
             return res.status(500).json({success: false, data: err});
         }
 
+        // Select all required notes from the database based on limit, start and order
         const query = client.query("SELECT * FROM notes ORDER BY date " + order + " LIMIT " + limit + " OFFSET " + start +";");
 
-        // Stream results back one row at a time
+
+        // Add results to the predefined array
         query.on('row', (row) => {
             results.push(row);
         });
 
-        // After all data is returned, close connection and return results
+        // Send data back to the client
         query.on('end', () => {
             done();
-            //If nothing was selected
+
             if (results[0] == undefined)
             {
-                return res.status(400).json({success: false, id: err});
+                return res.status(400).json({success: false, data: err});
             }
 
             return res.json(results);
@@ -122,15 +130,11 @@ router.get('/note', (req, res, next) => {
 
 // Add a new note
 router.post('/note/add', (req, res, next) => {
-    var receivedString = req.body.content;
+    var receivedString = req.body.content; // get note content from the body of the request
 
-    //DEBUG
-    console.log("Received string: " + receivedString);
-
-    // Get a Postgres client from the connection pool
+    // Connect to the database
     pg.defaults.ssl = true;
     pg.connect(connectionString, (err, client, done) => {
-
         // Handle connection errors
         if(err) {
             done();
@@ -142,11 +146,9 @@ router.post('/note/add', (req, res, next) => {
             console.log("Connected to the server");
         }
 
-        // Form a SQL query to add notes
+        // Form a SQL query to add a new note
         // Get current time
         var now = getCurrentDateTime();
-
-
         client.query("INSERT INTO notes(content, date) VALUES('" + receivedString + "', '"+ now +"') RETURNING id", function(err, result) {
             if(err)
             {
@@ -154,7 +156,7 @@ router.post('/note/add', (req, res, next) => {
             }
             else
             {
-                console.log(result);
+                // Return new ID
                 var newId = result.rows[0].id;
                 return res.json({id: newId});
             }
@@ -164,14 +166,10 @@ router.post('/note/add', (req, res, next) => {
 
 //Update a note
 router.put('/note/:id', (req, res, next) => {
-
-    // Grab data from the URL parameters
     var targetId = req.params.id;
-
-    // Grab data from http request
     var content = req.body.content;
 
-    // Get a Postgres client from the connection pool
+
     pg.defaults.ssl = true;
     pg.connect(connectionString, (err, client, done) => {
 
@@ -198,10 +196,8 @@ router.put('/note/:id', (req, res, next) => {
 
 //Delete note
 router.delete('/note/:id', (req, res, next) => {
-    // Grab data from the URL parameters
     const noteId = req.params.id;
 
-    // Get a Postgres client from the connection pool
     pg.defaults.ssl = true;
     pg.connect(connectionString, (err, client, done) => {
 
@@ -211,8 +207,6 @@ router.delete('/note/:id', (req, res, next) => {
             console.log(err);
             return res.status(500).json({success: false, data: err});
         }
-
-        // SQL Query > Delete Data
         client.query("DELETE FROM notes WHERE id=" + noteId + ";");
         return res.json({success: true, data: true});
     });
@@ -221,11 +215,13 @@ router.delete('/note/:id', (req, res, next) => {
 
 
 
-
+// Go to the home page if the user type in anything else in the URL
+// I wanted to implement a 404 Not Found page but I am note sure if it will look like an web app
 router.get('*', (req, res, next) => {
     res.sendFile(path.join(
         __dirname, '..', 'static', 'index.html'));
 });
+
 
 function getCurrentDateTime() {
     var today = new Date();
