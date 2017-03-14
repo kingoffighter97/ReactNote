@@ -6,7 +6,7 @@ import {NoteView} from "../dumb/NoteView";
 import {NoteEdit} from "../dumb/NoteEdit";
 
 import {updateLimit, updateStart, updateOrder, updateId, updateView} from "../../actions/GuiActions";
-import {updateCurrentEditedNote} from "../../actions/NoteEditActions";
+import {updateCurrentEditedNote, updateEditField} from "../../actions/NoteEditActions";
 import {singleSearchNote, multiSearchNotes} from "../../actions/NoteViewActions"
 
 class Body extends React.Component {
@@ -44,6 +44,7 @@ class Body extends React.Component {
                 Date={i.date}
                 Content={i.content}
                 handleSaveBtn={() => this.props.handleSaveBtn(i)}
+                handleEditFieldChange={(e) => this.props.handleEditNoteChange(e)}
             />;
         }
 
@@ -95,9 +96,11 @@ const mapDispatchToProps = (dispatch) => {
         handleSearchIdChange: (event) => {
             dispatch(updateId(event.target.value));
         },
+        handleEditNoteChange: (event) => {
+            dispatch(updateEditField(event.target.value));
+        },
         handleMassSearchBtn: (limit, start, order) => {
             // string validation
-
             if ( (isNaN(limit) && limit != "") || isNaN(start))
             {
                 alert("Error: 'Limit' and 'Start From' have to be a number.");
@@ -107,7 +110,6 @@ const mapDispatchToProps = (dispatch) => {
                 dispatch(multiSearchNotes(limit, start, order));
                 dispatch(updateView("VIEW"));
             }
-
         },
         handleSingleSearchBtn: (id) => {
             // string validation

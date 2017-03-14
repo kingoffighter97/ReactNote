@@ -6,7 +6,6 @@
 // Get command from the action from the Actions.
 // This is storing data to displayed to the GUI
 const NoteEditReducer = (state = initialState, action) => {
-
     switch (action.type) {
         case "UPDATE_CURRENT_EDITED_NOTE":
             state = {
@@ -18,9 +17,17 @@ const NoteEditReducer = (state = initialState, action) => {
             };
             break;
 
+        case "UPDATE_EDIT_FIELD":
+            state = {
+                ...state,
+                content: action.payload
+            };
+            break;
+
     }
     return state;
 };
+
 
 const initialState = {
     id: "",
@@ -28,5 +35,6 @@ const initialState = {
     content: "",
     currentAction: "ADD"
 };
+
 
 export default NoteEditReducer;

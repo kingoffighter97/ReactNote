@@ -15,6 +15,13 @@ export function updateCurrentEditedNote(id = "", date = "", content = "", mode =
     }
 }
 
+export function updateEditField(content) {
+
+    return {
+        type: "UPDATE_EDIT_FIELD",
+        payload: content
+    }
+}
 
 export function addNote(content) {
 

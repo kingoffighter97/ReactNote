@@ -17,7 +17,7 @@ export const NoteEdit = (props) => {
                     id="exampleTextarea"
                     rows="3"
                     value={props.Content}
-                    onChange={() => props.handleEditNoteChange()}
+                    onChange={(e) => props.handleEditFieldChange(e)}
                 />
                 <br/>
                 <button
