@@ -56,9 +56,23 @@ export function updateNote(id, content) {
                 alert(error);
             });
     }
-
 }
 
+export function deleteNote(id) {
+    return dispatch => {
+        axios.delete("/note/" + id)
+            .then((response) => {
+                dispatch({
+                    type: "GUI_UPDATE_VIEW",
+                    payload: ""
+                });
+                alert("Note deleted successfully");
+            })
+            .catch((error) => {
+                alert(error);
+            });
+    }
+}
 
 
 

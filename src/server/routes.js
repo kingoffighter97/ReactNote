@@ -213,8 +213,7 @@ router.delete('/note/:id', (req, res, next) => {
         }
 
         // SQL Query > Delete Data
-        client.query("DELETE FROM Note WHERE id=" + noteId + ";");
-
+        client.query("DELETE FROM notes WHERE id=" + noteId + ";");
         return res.json({success: true, data: true});
     });
 });

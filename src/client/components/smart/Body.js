@@ -6,7 +6,7 @@ import {NoteView} from "../dumb/NoteView";
 import {NoteEdit} from "../dumb/NoteEdit";
 
 import {updateLimit, updateStart, updateOrder, updateId, updateView} from "../../actions/GuiActions";
-import {updateCurrentEditedNote, updateEditField, addNote, updateNote} from "../../actions/NoteEditActions";
+import {updateCurrentEditedNote, updateEditField, addNote, updateNote, deleteNote} from "../../actions/NoteEditActions";
 import {singleSearchNote, multiSearchNotes} from "../../actions/NoteViewActions"
 
 class Body extends React.Component {
@@ -29,7 +29,8 @@ class Body extends React.Component {
                         IdNumber={object.id}
                         Date={object.date}
                         Content={object.content}
-                        editBtnClicked={() => this.props.handleEditBtn(object.id, object.date, object.content, "UPDATE")}
+                        handleEditBtn={() => this.props.handleEditBtn(object.id, object.date, object.content, "UPDATE")}
+                        handleDeleteBtn = {() => this.props.handleDeleteBtn(object.id)}
                     />
                 );
             }
@@ -81,10 +82,6 @@ const mapStateToProps = (state) => {
 // Declaring functions to be used and link them with the actions (through the store)
 const mapDispatchToProps = (dispatch) => {
     return {
-        handleEditBtn: (id, date, content, mode) => {
-            dispatch(updateView("EDIT"));
-            dispatch(updateCurrentEditedNote(id, date, content, mode));
-        },
         handleLimitChange: (event) => {
             dispatch(updateLimit(event.target.value));
         },
@@ -123,6 +120,13 @@ const mapDispatchToProps = (dispatch) => {
                 dispatch(singleSearchNote(id));
                 dispatch(updateView("VIEW"));
             }
+        },
+        handleEditBtn: (id, date, content, mode) => {
+            dispatch(updateView("EDIT"));
+            dispatch(updateCurrentEditedNote(id, date, content, mode));
+        },
+        handleDeleteBtn: (id) => {
+            dispatch(deleteNote(id));
         },
         handleSaveBtn: (state) => {
             console.log(state.currentAction);

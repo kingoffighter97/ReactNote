@@ -14,7 +14,8 @@ export const NoteView = (props) => {
                 <h4 className="card-title">ID - {props.IdNumber}</h4>
                 <h6 className="card-subtitle mb-2 text-muted">Last Edited: {props.Date}</h6>
                 <p className="card-text">{props.Content}</p>
-                <a href="#" onClick={() => props.editBtnClicked()} className="card-link">Edit</a>
+                <a href="#" onClick={() => props.handleEditBtn()} className="card-link">Edit</a>
+                <a href="#" onClick={() => props.handleDeleteBtn()} className="card-link">Delete</a>
             </div>
         </div>
     );
