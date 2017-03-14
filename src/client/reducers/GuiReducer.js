@@ -30,14 +30,14 @@ const GuiReducer = (state = initialState, action) => {
             state = {
                 ...state,
                 id: action.payload
-            }
+            };
             break;
 
         case "GUI_UPDATE_VIEW":
             state = {
                 ...state,
                 currentIn: action.payload
-            }
+            };
             break;
 
     }
@@ -46,10 +46,10 @@ const GuiReducer = (state = initialState, action) => {
 
 
 const initialState = {
-    limit: 0,
-    start: 1,
+    limit: "",
+    start: "1",
     order: "DESC",
-    id: 0,
+    id: "",
     currentIn: "VIEW"
 };
 

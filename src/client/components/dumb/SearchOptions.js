@@ -8,7 +8,7 @@ export const SearchOptions = (props) => {
                 <div className="form-group row">
                     <label className="col-md-5 col-form-label"><b>Limit</b></label>
                     <div className="col-md-6">
-                        <input className="form-control" onChange={(e) => props.handleLimitChange(e)} type="text" id="example-text-input" placeholder="Default: 10"/>
+                        <input className="form-control" onChange={(e) => props.handleLimitChange(e)} type="text" id="example-text-input" placeholder="Default: ALL"/>
                     </div>
                 </div>
 
@@ -22,9 +22,9 @@ export const SearchOptions = (props) => {
                 <div className="form-group row">
                     <label className="col-md-5 col-form-label" ><b>Order</b></label>
                     <div className="col-md-6">
-                        <select className="form-control custom-select" onChange={(e) => props.handleOrderChange(e)} id="inlineFormCustomSelect">
+                        <select className="form-control custom-select" value="DESC" onChange={(e) => props.handleOrderChange(e)} id="inlineFormCustomSelect">
                             <option value="ASC">Ascending</option>
-                            <option value="DSC">Descending</option>
+                            <option value="DESC">Descending</option>
                         </select>
                     </div>
                 </div>
@@ -36,7 +36,7 @@ export const SearchOptions = (props) => {
                 <div className="form-group row">
                     <label className="col-md-5 col-form-label"><b>Search For:</b></label>
                     <div className="col-md-6">
-                        <input className="form-control" onChange={(e) => props.handleSearchIdChange(e)} type="text" id="example-text-input" placeholder="Default: 10"/>
+                        <input className="form-control" onChange={(e) => props.handleSearchIdChange(e)} type="text" id="example-text-input"/>
                     </div>
                 </div>
 

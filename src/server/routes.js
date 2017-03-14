@@ -23,7 +23,43 @@ router.get('/favicon.ico', (req, res, next) => {
         __dirname, '..', 'static', 'favicon.ico'));
 });
 
+//Get one note
+router.get('/note/:id', (req, res, next) => {
+    const results = [];
+    var targetId = req.params.id; //Gets the note parameter
 
+
+
+    pg.defaults.ssl = true;
+    pg.connect(connectionString, (err, client, done) => {
+
+        // Handle connection errors
+        if(err) {
+            done();
+            console.log(err);
+            return res.status(500).json({success: false, data: err});
+        }
+
+        // Get 1 note from the server
+        const query = client.query("SELECT * from notes WHERE id=(" + targetId + ");");
+
+        // Stream results back one row at a time
+        query.on('row', (row) => {
+            results.push(row);
+        });
+
+        // close the connection and check returned data
+        query.on('end', () => {
+            done();
+            if (results[0] == undefined)
+            {
+                return res.status(400).json({success: false, id: err});
+            }
+
+            return res.json(results);
+        });
+    });
+});
 
 router.post('/note/add', (req, res, next) => {
     var receivedString = req.body;
@@ -63,46 +99,6 @@ router.post('/note/add', (req, res, next) => {
 });
 
 
-//Get one note
-router.get('/note/:id', (req, res, next) => {
-    const results = [];
-    var targetId = req.params.id; //Gets the note parameter
-
-
-
-    pg.defaults.ssl = true;
-    pg.connect(connectionString, (err, client, done) => {
-
-        // Handle connection errors
-        if(err) {
-            done();
-            console.log(err);
-            return res.status(500).json({success: false, data: err});
-        }
-
-        // Get 1 note from the server
-        const query = client.query("SELECT * from notes WHERE id=(" + targetId + ");");
-
-        // Stream results back one row at a time
-        query.on('row', (row) => {
-            results.push(row);
-        });
-
-        // close the connection and check returned data
-        query.on('end', () => {
-            done();
-            if (results[0] == undefined)
-            {
-                return res.status(400).json({success: false, id: err});
-            }
-
-            return res.json(results);
-        });
-    });
-});
-
-
-
 //Get several notes
 router.get('/note', (req, res, next) => {
     var results = [];
@@ -111,12 +107,12 @@ router.get('/note', (req, res, next) => {
     var start = req.query.start;
     var order = req.query.order;
 
-    if (limit == 0) {
+    if (limit == "") {
         // LIMIT ALL is the same as not having the LIMIT clause
         limit = "ALL";
     }
 
-    if (start == undefined) {
+    if (start == "") {
         // OFFSET 0 is the same as not having the OFFSET clause
         start = "0";
     }

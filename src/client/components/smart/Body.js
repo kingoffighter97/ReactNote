@@ -96,12 +96,22 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(updateId(event.target.value));
         },
         handleMassSearchBtn: (limit, start, order) => {
-            dispatch(multiSearchNotes(limit, start, order));
-            dispatch(updateView("VIEW"));
+            // string validation
+
+            if ( (isNaN(limit) && limit != "") || isNaN(start))
+            {
+                alert("Error: 'Limit' and 'Start From' have to be a number.");
+            }
+            else
+            {
+                dispatch(multiSearchNotes(limit, start, order));
+                dispatch(updateView("VIEW"));
+            }
+
         },
         handleSingleSearchBtn: (id) => {
             // string validation
-            if (isNaN(id))
+            if (isNaN(id) || isNaN(parseInt(id)))
             {
                 alert("Error: Search ID has to be a number.");
             }

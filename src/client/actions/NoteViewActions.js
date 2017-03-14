@@ -18,7 +18,9 @@ export function multiSearchNotes(limit,start,order) {
                 });
             })
             .catch((error) => {
-                alert(error);
+                if (error.response.status == 400) {
+                    alert("Error: 'Limit' was too low and/or 'Start from' was too high.");
+                }
             });
     };
 }
