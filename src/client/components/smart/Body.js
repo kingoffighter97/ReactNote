@@ -29,7 +29,7 @@ class Body extends React.Component {
                         IdNumber={object.id}
                         Date={object.date}
                         Content={object.content}
-                        editBtnClicked={() => this.props.handleEditBtn(object.Id, object.Date, object.Content)}
+                        editBtnClicked={() => this.props.handleEditBtn(object.id, object.date, object.content, object.mode)}
                     />
                 );
             }
@@ -40,9 +40,9 @@ class Body extends React.Component {
             console.log("currentIn: Edit");
             var i = this.props.noteEditReducer;
             content = <NoteEdit
-                IdNumber={i.Id}
-                Date={i.Date}
-                Content={i.Content}
+                IdNumber={i.id}
+                Date={i.date}
+                Content={i.content}
                 handleSaveBtn={() => this.props.handleSaveBtn(i)}
             />;
         }
@@ -79,7 +79,7 @@ const mapStateToProps = (state) => {
 // Declaring functions to be used and link them with the actions (through the store)
 const mapDispatchToProps = (dispatch) => {
     return {
-        handleEditBtn: (id, date, content) => {
+        handleEditBtn: (id, date, content, mode) => {
             dispatch(updateView("EDIT"));
             dispatch(updateCurrentEditedNote(id, date, content, mode));
         },

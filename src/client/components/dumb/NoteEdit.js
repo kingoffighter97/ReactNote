@@ -12,9 +12,21 @@ export const NoteEdit = (props) => {
             </button>
 
             <div className="form-group">
-                <textarea className="form-control" id="exampleTextarea" rows="3">{props.Content}</textarea>
+                <textarea
+                    className="form-control"
+                    id="exampleTextarea"
+                    rows="3"
+                    value={props.Content}
+                    onChange={() => props.handleEditNoteChange()}
+                />
                 <br/>
-                <button type="button" onClick={() => props.handleSaveBtn()} className="float-right offset-md-4 btn btn-primary">Save</button>
+                <button
+                    type="button"
+                    onClick={() => props.handleSaveBtn()}
+                    className="float-right offset-md-4 btn btn-primary"
+                >
+                    Save
+                </button>
             </div>
         </div>
     );

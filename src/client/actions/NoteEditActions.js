@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 
-export function updateCurrentEditedNote(id, date, content, mode) {
+export function updateCurrentEditedNote(id = "", date = "", content = "", mode = "ADD") {
 
     return {
         type: "UPDATE_CURRENT_EDITED_NOTE",

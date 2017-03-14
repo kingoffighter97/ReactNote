@@ -34,7 +34,7 @@ export const SearchOptions = (props) => {
 
             <form className="col-md-6">
                 <div className="form-group row">
-                    <label className="col-md-5 col-form-label"><b>Search For:</b></label>
+                    <label className="col-md-5 col-form-label"><b>Search For</b></label>
                     <div className="col-md-6">
                         <input className="form-control" onChange={(e) => props.handleSearchIdChange(e)} type="text" id="example-text-input"/>
                     </div>

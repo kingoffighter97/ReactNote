@@ -11,10 +11,10 @@ const NoteEditReducer = (state = initialState, action) => {
         case "UPDATE_CURRENT_EDITED_NOTE":
             state = {
                 ...state,
-                Id: action.payload.Id,
-                Date: action.payload.Date,
-                Content: action.payload.Content,
-                CurrentAction: action.payload.CurrentAction
+                id: action.payload.id,
+                date: action.payload.date,
+                content: action.payload.content,
+                currentAction: action.payload.currentAction
             };
             break;
 
@@ -23,10 +23,10 @@ const NoteEditReducer = (state = initialState, action) => {
 };
 
 const initialState = {
-    Id: 0,
-    Date: "",
-    Content: "",
-    CurrentAction: "ADD"
+    id: "",
+    date: "",
+    content: "",
+    currentAction: "ADD"
 };
 
 export default NoteEditReducer;

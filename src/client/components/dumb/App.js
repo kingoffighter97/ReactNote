@@ -1,5 +1,5 @@
 import React from "react";
-import {Header} from "./Header";
+import Header from "../smart/Header";
 import Body from "../smart/Body";
 
 export const App = (props) => {
