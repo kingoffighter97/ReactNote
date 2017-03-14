@@ -100,8 +100,16 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(updateView("VIEW"));
         },
         handleSingleSearchBtn: (id) => {
-            dispatch(singleSearchNote(id));
-            dispatch(updateView("VIEW"));
+            // string validation
+            if (isNaN(id))
+            {
+                alert("Error: Search ID has to be a number.");
+            }
+            else
+            {
+                dispatch(singleSearchNote(id));
+                dispatch(updateView("VIEW"));
+            }
         },
         handleSaveBtn: (state) => {
             if (state.currentAction == "ADD")

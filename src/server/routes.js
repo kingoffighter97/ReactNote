@@ -106,13 +106,12 @@ router.get('/note/:id', (req, res, next) => {
 //Get several notes
 router.get('/note', (req, res, next) => {
     var results = [];
-
     // Get the limit, start and order from the URL
-    var limit = req.param("limit");
-    var start = req.param("start");
-    var order = req.param("order");
+    var limit = req.query.limit;
+    var start = req.query.start;
+    var order = req.query.order;
 
-    if (limit == undefined) {
+    if (limit == 0) {
         // LIMIT ALL is the same as not having the LIMIT clause
         limit = "ALL";
     }
@@ -121,11 +120,15 @@ router.get('/note', (req, res, next) => {
         // OFFSET 0 is the same as not having the OFFSET clause
         start = "0";
     }
+    else
+    {
+        // Decrement of start
+        --start;
+    }
 
     if (order == undefined) {
         order = "DESC";
     }
-
 
     pg.defaults.ssl = true;
     pg.connect(connectionString, (err, client, done) => {
@@ -137,7 +140,6 @@ router.get('/note', (req, res, next) => {
             return res.status(500).json({success: false, data: err});
         }
 
-        //
         const query = client.query("SELECT * FROM notes ORDER BY date " + order + " LIMIT " + limit + " OFFSET " + start +";");
 
         // Stream results back one row at a time
