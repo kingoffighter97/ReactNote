@@ -3,47 +3,59 @@ import axios from "axios";
 
 
 export function updateCurrentEditedNote(id = "", date = "", content = "", mode = "ADD") {
-
+    console.log(mode);
     return {
         type: "UPDATE_CURRENT_EDITED_NOTE",
         payload: {
-            Id: id,
-            Date: date,
-            Content: content,
-            CurrentAction: mode
+            id: id,
+            date: date,
+            content: content,
+            currentAction: mode
         }
     }
 }
 
 export function updateEditField(content) {
-
     return {
         type: "UPDATE_EDIT_FIELD",
         payload: content
     }
 }
 
-export function addNote(content) {
 
-    axios.post("/note/add", content)
-        .then((response) => {
-            alert("Note added sucessfully. Note ID: " + response.data.id);
-        })
-        .catch(() => {
-            alert("Failed to add note");
-        });
+
+export function addNote(content) {
+    return dispatch => {
+        axios.post("/note/add", {content: content})
+            .then((response) => {
+                dispatch ({
+                    type: "GUI_UPDATE_VIEW",
+                    payload: ""
+                });
+                alert("Note added sucessfully. Note ID: " + response.data.id);
+            })
+            .catch((error) => {
+                alert(error);
+            });
+    };
+
 
 }
 
 export function updateNote(id, content) {
-
-    axios.put("/note" + id, content)
-        .then(() => {
-            alert("Note updated successfully");
-        })
-        .catch(() => {
-            alert("Failed to update note");
-        });
+    return dispatch => {
+        axios.put("/note/" + id, {content: content})
+            .then((response) => {
+                dispatch({
+                    type: "GUI_UPDATE_VIEW",
+                    payload: ""
+                });
+                alert("Note updated successfully");
+            })
+            .catch((error) => {
+                alert(error);
+            });
+    }
 
 }
 

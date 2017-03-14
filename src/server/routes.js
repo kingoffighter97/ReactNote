@@ -61,43 +61,6 @@ router.get('/note/:id', (req, res, next) => {
     });
 });
 
-router.post('/note/add', (req, res, next) => {
-    var receivedString = req.body;
-
-    //DEBUG
-    console.log("Received string: " + receivedString);
-
-    // Get a Postgres client from the connection pool
-    pg.defaults.ssl = true;
-    pg.connect(connectionString, (err, client, done) => {
-
-        // Handle connection errors
-        if(err) {
-            done();
-            console.log("Failed to connect to the server: " + err);
-            return res.status(500).json({success: false, id: err});
-        }
-        else
-        {
-            console.log("Connected to the server");
-        }
-
-        // Form a SQL query to add notes
-        client.query("INSERT INTO notes(content) VALUES('" + receivedString + "') RETURNING id", function(err, result) {
-            if(err)
-            {
-                console.log("Failed to execute query: " + err);
-                return res.status(500).json({success: false, id: err});
-            }
-            else
-            {
-                var newId = result.rows[0].id;
-                return res.json(newId);
-            }
-        });
-    });
-});
-
 
 //Get several notes
 router.get('/note', (req, res, next) => {
@@ -157,7 +120,80 @@ router.get('/note', (req, res, next) => {
     });
 });
 
+// Add a new note
+router.post('/note/add', (req, res, next) => {
+    var receivedString = req.body.content;
 
+    //DEBUG
+    console.log("Received string: " + receivedString);
+
+    // Get a Postgres client from the connection pool
+    pg.defaults.ssl = true;
+    pg.connect(connectionString, (err, client, done) => {
+
+        // Handle connection errors
+        if(err) {
+            done();
+            console.log("Failed to connect to the server: " + err);
+            return res.status(500).json({success: false, id: err});
+        }
+        else
+        {
+            console.log("Connected to the server");
+        }
+
+        // Form a SQL query to add notes
+        // Get current time
+        var now = getCurrentDateTime();
+
+
+        client.query("INSERT INTO notes(content, date) VALUES('" + receivedString + "', '"+ now +"') RETURNING id", function(err, result) {
+            if(err)
+            {
+                return res.status(500).json({success: false, id: err});
+            }
+            else
+            {
+                console.log(result);
+                var newId = result.rows[0].id;
+                return res.json({id: newId});
+            }
+        });
+    });
+});
+
+//Update a note
+router.put('/note/:id', (req, res, next) => {
+
+    // Grab data from the URL parameters
+    var targetId = req.params.id;
+
+    // Grab data from http request
+    var content = req.body.content;
+
+    // Get a Postgres client from the connection pool
+    pg.defaults.ssl = true;
+    pg.connect(connectionString, (err, client, done) => {
+
+        // Handle connection errors
+        if(err) {
+            done();
+            console.log(err);
+            return res.status(500).json({success: false, data: err});
+        }
+
+        //Update Note
+        // Get current time
+        var now = getCurrentDateTime();
+        var query = "UPDATE notes SET " +
+            "content = '" + content + "', " +
+            "date = '"+ now +"' " +
+            "WHERE id=" + targetId + ";";
+        client.query(query);
+
+        return res.json({success: true, id: true});
+    });
+});
 
 
 //Delete note
@@ -185,38 +221,29 @@ router.delete('/note/:id', (req, res, next) => {
 
 
 
-//Update note
-router.put('/note/:id', (req, res, next) => {
 
-    // Grab data from the URL parameters
-    var targetId = req.params.id;
-
-    // Grab data from http request
-    var content = req.body.content;
-
-    // Get a Postgres client from the connection pool
-    pg.defaults.ssl = true;
-    pg.connect(connectionString, (err, client, done) => {
-
-        // Handle connection errors
-        if(err) {
-            done();
-            console.log(err);
-            return res.status(500).json({success: false, data: err});
-        }
-
-        //Update Note
-        var query = "UPDATE notes SET content = '" + content + "' WHERE id=" + targetId + ";";
-        console.log(query);
-        client.query(query);
-
-        return res.json({success: true, data: true});
-    });
-});
 
 router.get('*', (req, res, next) => {
     res.sendFile(path.join(
         __dirname, '..', 'static', 'index.html'));
 });
+
+function getCurrentDateTime() {
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = today.getMonth()+1; //January is 0
+    var date = today.getDate();
+    var hour = today.getHours();
+    var minute = today.getMinutes();
+
+    if(date<10){
+        date='0'+date;
+    }
+
+    if(month<10){
+        month='0'+month;
+    }
+    return (year+'-'+month+'-'+date+' '+hour+':'+minute);
+}
 
 module.exports = router;

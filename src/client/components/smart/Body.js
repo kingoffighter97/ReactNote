@@ -6,7 +6,7 @@ import {NoteView} from "../dumb/NoteView";
 import {NoteEdit} from "../dumb/NoteEdit";
 
 import {updateLimit, updateStart, updateOrder, updateId, updateView} from "../../actions/GuiActions";
-import {updateCurrentEditedNote, updateEditField} from "../../actions/NoteEditActions";
+import {updateCurrentEditedNote, updateEditField, addNote, updateNote} from "../../actions/NoteEditActions";
 import {singleSearchNote, multiSearchNotes} from "../../actions/NoteViewActions"
 
 class Body extends React.Component {
@@ -29,7 +29,7 @@ class Body extends React.Component {
                         IdNumber={object.id}
                         Date={object.date}
                         Content={object.content}
-                        editBtnClicked={() => this.props.handleEditBtn(object.id, object.date, object.content, object.mode)}
+                        editBtnClicked={() => this.props.handleEditBtn(object.id, object.date, object.content, "UPDATE")}
                     />
                 );
             }
@@ -39,6 +39,7 @@ class Body extends React.Component {
         {
             console.log("currentIn: Edit");
             var i = this.props.noteEditReducer;
+
             content = <NoteEdit
                 IdNumber={i.id}
                 Date={i.date}
@@ -124,6 +125,7 @@ const mapDispatchToProps = (dispatch) => {
             }
         },
         handleSaveBtn: (state) => {
+            console.log(state.currentAction);
             if (state.currentAction == "ADD")
             {
                 dispatch(addNote(state.content));
