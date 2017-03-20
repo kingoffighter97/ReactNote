@@ -31,7 +31,7 @@ router.get('/note/:id', (req, res, next) => {
 
     const results = [];
 
-    var targetId = req.params.id; // Get target ID from the URL
+    var targetId = req.params.id; //Get target ID from the URL
 
     // Connect to the database
     pg.defaults.ssl = true;
@@ -44,7 +44,7 @@ router.get('/note/:id', (req, res, next) => {
         }
 
         // Get 1 note from the server
-        const query = client.query("SELECT * from notes WHERE id=(" + targetId + ");");
+        const query = client.query("SELECT * from notes WHERE id=" + targetId + ";");
 
         // Get results back
         // We are getting only 1 note so there should be only 1 element in results
@@ -95,7 +95,11 @@ router.get('/note', (req, res, next) => {
     }
 
 
+
     // Connect to the database
+
+    //pg.types.setTypeParser(1114, str => str);
+
     pg.defaults.ssl = true;
     pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
@@ -111,6 +115,7 @@ router.get('/note', (req, res, next) => {
 
         // Add results to the predefined array
         query.on('row', (row) => {
+            console.log(row.date.getDate());
             results.push(row);
         });
 
@@ -127,6 +132,7 @@ router.get('/note', (req, res, next) => {
         });
     });
 });
+
 
 // Add a new note
 router.post('/note/add', (req, res, next) => {
@@ -189,7 +195,7 @@ router.put('/note/:id', (req, res, next) => {
             "WHERE id=" + targetId + ";";
         client.query(query);
 
-        return res.json({success: true, id: true});
+        return res.json({success: true});
     });
 });
 
@@ -208,7 +214,7 @@ router.delete('/note/:id', (req, res, next) => {
             return res.status(500).json({success: false, data: err});
         }
         client.query("DELETE FROM notes WHERE id=" + noteId + ";");
-        return res.json({success: true, data: true});
+        return res.json({success: true});
     });
 });
 
@@ -241,4 +247,7 @@ function getCurrentDateTime() {
     return (year+'-'+month+'-'+date+' '+hour+':'+minute);
 }
 
+// function reformatDateTime(currentDateTime) {
+//     if (currentDateTime)
+// }
 module.exports = router;
