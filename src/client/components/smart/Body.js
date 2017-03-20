@@ -126,7 +126,9 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(updateCurrentEditedNote(id, date, content, mode));
         },
         handleDeleteBtn: (id) => {
-            dispatch(deleteNote(id));
+            if (confirm("Are you sure you want to delete note ID " + id + "?")) {
+                dispatch(deleteNote(id));
+            }
         },
         handleSaveBtn: (state) => {
             console.log(state.currentAction);
