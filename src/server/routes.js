@@ -49,6 +49,7 @@ router.get('/note/:id', (req, res, next) => {
         // Get results back
         // We are getting only 1 note so there should be only 1 element in results
         query.on('row', (row) => {
+            row.date = reformatDateTime(row.date);
             results.push(row);
         });
 
@@ -97,9 +98,6 @@ router.get('/note', (req, res, next) => {
 
 
     // Connect to the database
-
-    //pg.types.setTypeParser(1114, str => str);
-
     pg.defaults.ssl = true;
     pg.connect(connectionString, (err, client, done) => {
         // Handle connection errors
@@ -115,7 +113,7 @@ router.get('/note', (req, res, next) => {
 
         // Add results to the predefined array
         query.on('row', (row) => {
-            console.log(row.date.getDate());
+            row.date = reformatDateTime(row.date);
             results.push(row);
         });
 
@@ -237,17 +235,81 @@ function getCurrentDateTime() {
     var hour = today.getHours();
     var minute = today.getMinutes();
 
-    if(date<10){
-        date='0'+date;
-    }
+    date = fixDateTimeUnder10(date);
+    month = fixDateTimeUnder10(month);
+    hour = fixDateTimeUnder10(hour);
+    minute = fixDateTimeUnder10(minute);
 
-    if(month<10){
-        month='0'+month;
-    }
+
     return (year+'-'+month+'-'+date+' '+hour+':'+minute);
 }
 
-// function reformatDateTime(currentDateTime) {
-//     if (currentDateTime)
-// }
+function fixDateTimeUnder10(data) {
+    if (data < 10)
+    {
+        data = '0' + data;
+    }
+
+    return data;
+}
+
+
+function reformatDateTime(data) {
+    var today = new Date();
+    var datePart;
+
+
+    var diff = today.getDate() - data.getDate();
+
+    switch (diff)
+    {
+        case 1: // yesterday
+            datePart = "Yesterday";
+            break;
+
+        case 0: // today
+            datePart = "Today";
+            break;
+
+        default:
+            if (diff > 7)
+            {
+                var dYear = data.getFullYear();
+                var dMonth = data.getMonth()+1; //January is 0
+                var dDate = data.getDate();
+
+                dDate = fixDateTimeUnder10(dDate);
+                dMonth = fixDateTimeUnder10(dMonth);
+
+                datePart = dYear+'-'+dMonth+'-'+dDate;
+            }
+            else
+            {
+                datePart = dayDictionary[data.getDay()];
+                console.log(datePart);
+            }
+
+
+            break;
+    }
+
+    var dHour = data.getHours();
+    var dMinute = data.getMinutes();
+    dHour = fixDateTimeUnder10(dHour);
+    dMinute = fixDateTimeUnder10(dMinute);
+
+
+    return datePart + " " + dHour + ":" + dMinute;
+}
+
+const dayDictionary = {
+    0: "Sunday",
+    1: "Monday",
+    2: "Tuesday",
+    3: "Wednesday",
+    4: "Thursday",
+    5: "Friday",
+    6: "Saturday"
+};
+
 module.exports = router;
