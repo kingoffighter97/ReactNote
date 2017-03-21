@@ -167,7 +167,7 @@ router.post('/note/add', (req, res, next) => {
         });
     });
 });
-
+//Just imagine you're editing notes in Iceland until I'm fixing this :)
 //Update a note
 router.put('/note/:id', (req, res, next) => {
     var targetId = req.params.id;
@@ -193,7 +193,20 @@ router.put('/note/:id', (req, res, next) => {
             "WHERE id=" + targetId + ";";
         client.query(query);
 
-        return res.json({success: true});
+        client.query(query, function(err, result) {
+            if(err)
+            {
+                return res.status(500).json({success: false, id: err});
+            }
+            else
+            {
+
+                return res.json({success: true});
+            }
+        });
+
+
+
     });
 });
 
@@ -294,6 +307,7 @@ function reformatDateTime(data) {
     }
 
     var dHour = data.getHours();
+    dHour -= 4;
     var dMinute = data.getMinutes();
     dHour = fixDateTimeUnder10(dHour);
     dMinute = fixDateTimeUnder10(dMinute);
