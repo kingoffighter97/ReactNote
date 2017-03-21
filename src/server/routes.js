@@ -136,6 +136,9 @@ router.get('/note', (req, res, next) => {
 router.post('/note/add', (req, res, next) => {
     var receivedString = req.body.content; // get note content from the body of the request
 
+    // Replace ' with \' so it won't interfere with the SQL query
+    receivedString = receivedString.replace("'", "\'");
+
     // Connect to the database
     pg.defaults.ssl = true;
     pg.connect(connectionString, (err, client, done) => {
@@ -167,11 +170,17 @@ router.post('/note/add', (req, res, next) => {
         });
     });
 });
-//Just imagine you're editing notes in Iceland until I'm fixing this :)
+
+
 //Update a note
 router.put('/note/:id', (req, res, next) => {
     var targetId = req.params.id;
     var content = req.body.content;
+
+
+
+    // Replace ' with '' so it won't interfere with the SQL query
+    content = content.replace("'", "''");
 
 
     pg.defaults.ssl = true;
@@ -191,7 +200,6 @@ router.put('/note/:id', (req, res, next) => {
             "content = '" + content + "', " +
             "date = '"+ now +"' " +
             "WHERE id=" + targetId + ";";
-        client.query(query);
 
         client.query(query, function(err, result) {
             if(err)
