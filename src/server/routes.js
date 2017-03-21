@@ -299,7 +299,7 @@ function reformatDateTime(data) {
     dMinute = fixDateTimeUnder10(dMinute);
 
 
-    return datePart + " " + dHour + ":" + dMinute;
+    return datePart + " " + dHour + ":" + dMinute + " UTC";
 }
 
 const dayDictionary = {
