@@ -307,7 +307,6 @@ function reformatDateTime(data) {
     }
 
     var dHour = data.getHours();
-    dHour -= 4;
     var dMinute = data.getMinutes();
     dHour = fixDateTimeUnder10(dHour);
     dMinute = fixDateTimeUnder10(dMinute);
